@@ -1,0 +1,59 @@
+{
+  "name": "tl-react-numeric-input",
+  "version": "1.0.0",
+  "description": "Numeric input component that can replace the native numeric input which is not yet very well supported and where it is, it does not have the same appearance across the browsers",
+  "main": "/dist/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MitrophD/tl-react-numeric-input"
+  },
+  "author": "Dmitriy Mitrophanskiy <dmitrophanskiy@gmail.com>",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "bash shells/build.sh",
+    "start": "bash shells/start.sh"
+  },
+  "license": "MIT",
+  "files": [
+    "/dist/*"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@hot-loader/react-dom": "^16.8.6",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.1",
+    "duplicate-package-checker-webpack-plugin": "^3.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-flowtype": "^3.6.1",
+    "eslint-plugin-flowtype-errors": "^4.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
+    "flow-bin": "^0.98.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.6.0",
+    "node-sass": "^4.12.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "react": "^16.8.6",
+    "react-addons-shallow-compare": "^15.6.2",
+    "react-dom": "^16.8.6",
+    "react-hot-loader": "^4.8.4",
+    "sass-loader": "^7.1.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-dev-server": "^3.3.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-addons-shallow-compare": "^15.6.2"
+  }
+}

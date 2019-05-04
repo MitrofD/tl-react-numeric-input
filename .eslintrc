@@ -1,0 +1,30 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "jsx-a11y",
+    "import",
+    "flowtype",
+    "flowtype-errors",
+    "react"
+  ],
+  "env": {
+    "browser": true
+  },
+  "settings": {
+    "import/extensions": [
+      ".js",
+      ".jsx"
+    ]
+  },
+  "rules": {
+    "flowtype/no-types-missing-file-annotation": 0,
+    "import/no-extraneous-dependencies": 0,
+    "no-unused-vars": 1,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/label-has-associated-control": 0
+  }
+}

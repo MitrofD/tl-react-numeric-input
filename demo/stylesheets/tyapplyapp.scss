@@ -1,0 +1,18 @@
+$tl-t-color: #374145 !default;
+$tl-l-color: #f35540 !default;
+
+.text-tl-t {
+  color: $tl-t-color;
+}
+
+.text-tl-l {
+  color: $tl-l-color;
+}
+
+.border-tl-t {
+  border-color: $tl-t-color !important;
+}
+
+.border-tl-l {
+  border-color: $tl-l-color !important;
+}

@@ -1,0 +1,16 @@
+@import 'stylesheets/bootstrap/bootstrap';
+@import 'stylesheets/tyapplyapp';
+
+.Root {
+  padding: 100px 0;
+
+  .control {
+    label {
+      margin-bottom: 0;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+  }
+}
