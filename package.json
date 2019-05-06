@@ -1,15 +1,15 @@
 {
   "name": "tl-react-numeric-input",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "Numeric input component that can replace the native numeric input which is not yet very well supported and where it is, it does not have the same appearance across the browsers",
-  "main": "/dist/",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/MitrophD/tl-react-numeric-input"
   },
   "author": "Dmitriy Mitrophanskiy <dmitrophanskiy@gmail.com>",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "build": "bash shells/build.sh",
     "start": "bash shells/start.sh"
   },
@@ -43,7 +43,6 @@
     "node-sass": "^4.12.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "react": "^16.8.6",
-    "react-addons-shallow-compare": "^15.6.2",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.8.4",
     "sass-loader": "^7.1.0",
@@ -53,7 +52,6 @@
     "webpack-dev-server": "^3.3.1"
   },
   "peerDependencies": {
-    "react": "^16.8.6",
-    "react-addons-shallow-compare": "^15.6.2"
+    "react": "^16.8.6"
   }
 }

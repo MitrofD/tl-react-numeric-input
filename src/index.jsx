@@ -1,5 +1,4 @@
 import React from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
 
 type NumVal = string | number;
 type ParseFunc = (NumVal) => number;
@@ -129,6 +128,24 @@ function safeSetFromVal(val: any) {
   setFromVal.call(this, setVal);
 }
 
+const shallowCompare = (newObj: Object, prevObj: Object) => {
+  const newProps = Object.keys(newObj);
+  const newPropsLength = newProps.length;
+  let i = 0;
+
+  for (; i < newPropsLength; i += 1) {
+    const newProp = newProps[i];
+    const newVal = newObj[newProp];
+    const oldVal = prevObj[newProp];
+
+    if (newVal !== oldVal) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 class TLNumericInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -249,7 +266,7 @@ class TLNumericInput extends React.Component<Props> {
       safeSetFromVal.call(this, nextProps.value);
     }
 
-    return shallowCompare(this, nextProps);
+    return shallowCompare(nextProps, this.props);
   }
 
   onBlur(event: SyntheticEvent<HTMLInputElement>) {

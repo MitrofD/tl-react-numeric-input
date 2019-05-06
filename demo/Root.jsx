@@ -37,7 +37,6 @@ const Root = () => {
           <TLNumericInput
             className="form-control form-control-lg"
             disabledDecimal={disabledDecimal}
-            placeholder="Number value"
           />
         </div>
       </div>

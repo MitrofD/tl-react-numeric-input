@@ -18,9 +18,6 @@ const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const config = {
   mode,
   entry: entryPath,
-  node: {
-    __dirname: true,
-  },
   module: {
     rules: [
       {
@@ -71,8 +68,9 @@ const config = {
   devtool: 'eval',
   optimization: {},
   output: {
-    path: distPath,
     filename: 'index.js',
+    libraryTarget: 'umd',
+    path: distPath,
   },
   devServer: {
     clientLogLevel: 'none',
