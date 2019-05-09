@@ -15,6 +15,29 @@ const entryPath = path.resolve(__dirname, isDevMode ? 'demo' : 'src');
 const distPath = path.resolve(__dirname, 'dist');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
+const cssLoaders = [
+  {
+    loader: MiniCssExtractPlugin.loader,
+    options: {
+      hmr: isDevMode,
+    },
+  },
+  'thread-loader', {
+    loader: 'css-loader',
+    options: {
+      sourceMap: isDevMode,
+    },
+  },
+];
+
+const scssLoaders = cssLoaders.slice();
+scssLoaders.push({
+  loader: 'fast-sass-loader',
+  options: {
+    sourceMap: isDevMode,
+  },
+});
+
 const config = {
   mode,
   entry: entryPath,
@@ -22,39 +45,28 @@ const config = {
     rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: nodeModulesPath,
-        options: {
-          cacheDirectory: true,
-        },
-      }, {
-        test: /\.s?css$/,
         exclude: nodeModulesPath,
         use: [
+          'thread-loader',
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: 'babel-loader',
             options: {
-              hmr: isDevMode,
-            },
-          }, {
-            loader: 'css-loader',
-            options: {
-              sourceMap: isDevMode,
-            },
-          }, {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: isDevMode,
+              cacheDirectory: true,
             },
           },
         ],
+      }, {
+        test: /\.css$/,
+        exclude: nodeModulesPath,
+        use: cssLoaders,
+      }, {
+        test: /\.scss$/,
+        exclude: nodeModulesPath,
+        use: scssLoaders,
       },
     ],
   },
   resolve: {
-    modules: [
-      nodeModulesPath,
-    ],
     alias: {},
     extensions: [
       '.js',
