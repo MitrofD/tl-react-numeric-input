@@ -134,7 +134,7 @@ function setFromVal(val: string) {
 
   if (this.input.value !== pureValue) {
     this.input.value = pureValue;
-    this.propsOnSet(pureValue, this.input);
+    this.propsOnSet(this);
   }
 }
 
@@ -327,7 +327,7 @@ class TLNumericInput extends React.Component<Props> {
     const pureValue = getDefaultVal.call(this, input.value);
     input.value = pureValue;
     this.propsOnBlur(event);
-    this.propsOnSet(pureValue, this.input);
+    this.propsOnSet(this);
   }
 
   onChange(event: SyntheticEvent<HTMLInputElement>) {
@@ -335,7 +335,7 @@ class TLNumericInput extends React.Component<Props> {
     const pureValue = this.getValue(input.value);
     input.value = pureValue;
     this.propsOnChange(event);
-    this.propsOnSet(pureValue, this.input);
+    this.propsOnSet(this);
   }
 
   onFocus(event: SyntheticEvent<HTMLInputElement>) {
@@ -382,10 +382,6 @@ class TLNumericInput extends React.Component<Props> {
   get value() {
     const numVal = this.parseFunc(this.input.value);
     return numVal || null;
-  }
-
-  set value(val: any) {
-    safeSetFromVal.call(this, val);
   }
 
   render() {
