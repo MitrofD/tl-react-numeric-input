@@ -79,7 +79,6 @@ const config = {
     port: 3000,
     open: true,
     overlay: {
-      warnings: true,
       errors: true,
     },
   },
@@ -118,6 +117,7 @@ if (isDevMode) {
       template: `${entryPath}/index.html`,
     }),
   ]);
+
 // Production mode
 } else {
   Array.prototype.push.apply(minimazers, [

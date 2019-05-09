@@ -3,10 +3,10 @@ import React from 'react';
 type NumVal = string | number;
 type ParseFunc = (NumVal) => number;
 
-const BACKSPACE_KEY_CODE = 8;
-const DELETE_KEY_CODE = 46;
-const EMPTY = '';
-const MINUS = '-';
+const EMPTY_STR = '';
+const MINUS_STR = '-';
+const ZERO_STR = '0';
+const MINUS_ZERO_STR = MINUS_STR + ZERO_STR;
 
 type Props = Object & {
   className?: ?string,
@@ -28,15 +28,15 @@ const genEmptyFunc = (min: ?number) => {
   if (typeof min !== 'number' || min < 0) {
     return (val: string) => {
       const firstVal = val[0];
-      return firstVal === MINUS ? MINUS : EMPTY;
+      return firstVal === MINUS_STR ? MINUS_STR : EMPTY_STR;
     };
   }
 
-  return () => EMPTY;
+  return () => EMPTY_STR;
 };
 
 const genRegExp = (props: Props) => {
-  let regExpStr = props.disabledDecimal ? '0*(\\d*)' : '0*((0|\\d+)\\.?\\d*)';
+  let regExpStr = props.disabledDecimal ? '0*(0|\\d+)' : '0*((0|\\d+)\\.?\\d*)';
 
   if (typeof props.min !== 'number' || props.min < 0) {
     regExpStr = `(-?)${regExpStr}`;
@@ -47,6 +47,15 @@ const genRegExp = (props: Props) => {
   regExpStr = `^${regExpStr}`;
 
   return new RegExp(regExpStr);
+};
+
+const getRequiredVal = (min: ?number, isRequred: any) => {
+  // eslint-disable-next-line no-extra-boolean-cast
+  if (!!isRequred) {
+    return typeof min === 'number' ? min.toString() : ZERO_STR;
+  }
+
+  return EMPTY_STR;
 };
 
 const getClassName = (propsVal: any) => {
@@ -62,6 +71,19 @@ const getClassName = (propsVal: any) => {
 
   return defClassName;
 };
+
+function getDefaultVal(val: string) {
+  let pureValue = this.getValue(val);
+  const numVal = this.parseFunc(pureValue);
+
+  if (Number.isNaN(numVal)) {
+    pureValue = this.requiredVal;
+  } else if (typeof this.min === 'number' && numVal < this.min) {
+    pureValue = this.min;
+  }
+
+  return pureValue;
+}
 
 const getEvent = (eventName: string, propsVal: any) => {
   if (propsVal) {
@@ -108,17 +130,16 @@ const checkExtremums = (min: ?number, max: ?number) => {
 };
 
 function setFromVal(val: string) {
-  const pureValue = this.getPureValue(val);
+  const pureValue = this.getValue(val);
 
   if (this.input.value !== pureValue) {
-    this.isDeleteMode = false;
     this.input.value = pureValue;
     this.propsOnSet(pureValue, this.input);
   }
 }
 
 function safeSetFromVal(val: any) {
-  let setVal = EMPTY;
+  let setVal = EMPTY_STR;
 
   try {
     setVal = val.toString();
@@ -149,13 +170,35 @@ const shallowCompare = (newObj: Object, prevObj: Object) => {
 class TLNumericInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
-  isDeleteMode = false;
+  defaultValue: string;
+
+  emptyFunc: Function;
+
+  max: ?number;
+
+  min: ?number;
+
+  needRegExp: RegExp;
+
+  input: HTMLInputElement;
+
+  parseFunc: ParseFunc;
+
+  propsOnBlur: Function;
+
+  propsOnChange: Function;
+
+  propsOnFocus: Function;
+
+  propsOnSet: Function;
+
+  requiredVal: string;
 
   constructor(props: Props, context: null) {
     super(props, context);
     this.propsOnBlur = getEvent('onBlur', props.onBlur);
     this.propsOnChange = getEvent('onChange', props.onChange);
-    this.propsOnKeyDown = getEvent('onKeyDown', props.onKeyDown);
+    this.propsOnFocus = getEvent('onFocus', props.onChange);
     this.propsOnSet = getEvent('onSet', props.onSet);
     this.parseFunc = getParseFunc(props.disabledDecimal);
     this.needRegExp = genRegExp(props);
@@ -163,8 +206,9 @@ class TLNumericInput extends React.Component<Props> {
     this.min = getExtremum('min', props.min, this.parseFunc, props.disabledDecimal);
     checkExtremums(this.min, this.max);
     this.emptyFunc = genEmptyFunc(this.min);
+    this.requiredVal = getRequiredVal(this.min, props.required);
 
-    let defaultValue = EMPTY;
+    let defaultValue = EMPTY_STR;
 
     if (props.value && typeof props.value.toString === 'function') {
       defaultValue = props.value.toString();
@@ -172,26 +216,29 @@ class TLNumericInput extends React.Component<Props> {
       defaultValue = props.defaultValue.toString();
     }
 
-    this.defaultValue = this.getPureValue(defaultValue);
+    this.defaultValue = getDefaultVal.call(this, defaultValue);
 
     const self: any = this;
     self.onBlur = this.onBlur.bind(this);
     self.onChange = this.onChange.bind(this);
-    self.onKeyDown = this.onKeyDown.bind(this);
+    self.onFocus = this.onFocus.bind(this);
     self.onRef = this.onRef.bind(this);
   }
 
   shouldComponentUpdate(nextProps: Props) {
+    const propsCopy = Object.assign({}, this.props);
+
     const {
       className,
       disabledDecimal,
       onBlur,
       onChange,
-      onKeyDown,
+      onFocus,
       onSet,
       max,
       min,
-    } = this.props;
+      required,
+    } = propsCopy;
 
     let needCheckExtremums = false;
     let needUpdateMax = false;
@@ -199,39 +246,39 @@ class TLNumericInput extends React.Component<Props> {
     let needUpdateRegExp = false;
 
     if (nextProps.className !== className) {
-      this.props.className = nextProps.className;
+      propsCopy.className = nextProps.className;
       this.input.className = getClassName(nextProps.className);
     }
 
     if (nextProps.onBlur !== onBlur) {
-      this.props.onBlur = nextProps.onBlur;
+      propsCopy.onBlur = nextProps.onBlur;
       this.propsOnBlur = getEvent('onBlur', nextProps.onBlur);
     }
 
     if (nextProps.onChange !== onChange) {
-      this.props.onChange = nextProps.onChange;
+      propsCopy.onChange = nextProps.onChange;
       this.propsOnChange = getEvent('onChange', nextProps.onChange);
     }
 
-    if (nextProps.onKeyDown !== onKeyDown) {
-      this.props.onKeyDown = nextProps.onKeyDown;
-      this.propsOnKeyDown = getEvent('onKeyDown', nextProps.onKeyDown);
+    if (nextProps.onFocus !== onFocus) {
+      propsCopy.onFocus = nextProps.onFocus;
+      this.propsOnFocus = getEvent('onFocus', nextProps.onFocus);
     }
 
     if (nextProps.onSet !== onSet) {
-      this.props.onSet = nextProps.onSet;
+      propsCopy.onSet = nextProps.onSet;
       this.propsOnSet = getEvent('onSet', nextProps.onSet);
     }
 
     if (nextProps.max !== max) {
       needUpdateMax = true;
-      this.props.max = nextProps.max;
+      propsCopy.max = nextProps.max;
     }
 
     if (nextProps.min !== min) {
       needUpdateMin = true;
       needUpdateRegExp = true;
-      this.props.min = nextProps.min;
+      propsCopy.min = nextProps.min;
       this.emptyFunc = genEmptyFunc(nextProps.min);
     }
 
@@ -266,18 +313,18 @@ class TLNumericInput extends React.Component<Props> {
       safeSetFromVal.call(this, nextProps.value);
     }
 
-    return shallowCompare(nextProps, this.props);
+    if (needUpdateMin || nextProps.required !== required) {
+      propsCopy.required = nextProps.required;
+      this.requiredVal = getRequiredVal(this.min, nextProps.required);
+      this.input.value = getDefaultVal.call(this, this.input.value);
+    }
+
+    return shallowCompare(nextProps, propsCopy);
   }
 
   onBlur(event: SyntheticEvent<HTMLInputElement>) {
-    if (!this.isDeleteMode) {
-      this.propsOnBlur(event);
-      return;
-    }
-
-    this.isDeleteMode = false;
     const input = event.currentTarget;
-    const pureValue = this.getPureValue(input.value);
+    const pureValue = getDefaultVal.call(this, input.value);
     input.value = pureValue;
     this.propsOnBlur(event);
     this.propsOnSet(pureValue, this.input);
@@ -285,19 +332,21 @@ class TLNumericInput extends React.Component<Props> {
 
   onChange(event: SyntheticEvent<HTMLInputElement>) {
     const input = event.currentTarget;
-    const pureValue = this.getPureValue(input.value);
-
-    if (!this.isDeleteMode) {
-      input.value = pureValue;
-    }
-
+    const pureValue = this.getValue(input.value);
+    input.value = pureValue;
     this.propsOnChange(event);
     this.propsOnSet(pureValue, this.input);
   }
 
-  onKeyDown(event: SyntheticKeyboardEvent<HTMLInputElement>) {
-    this.isDeleteMode = event.keyCode === BACKSPACE_KEY_CODE || event.keyCode === DELETE_KEY_CODE;
-    this.propsOnKeyDown(event);
+  onFocus(event: SyntheticEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const value = input.value.trim();
+
+    if (value === ZERO_STR || value === MINUS_ZERO_STR) {
+      input.setSelectionRange(0, value.length);
+    }
+
+    this.propsOnFocus(event);
   }
 
   onRef(mbInput: ?HTMLInputElement) {
@@ -306,16 +355,12 @@ class TLNumericInput extends React.Component<Props> {
     }
   }
 
-  getPureValue(value: string): any {
+  getValue(value: string): any {
     const cleanValue = value.trim();
     const numVal = this.parseFunc(cleanValue);
 
     if (Number.isNaN(numVal)) {
       return this.emptyFunc(cleanValue);
-    }
-
-    if (typeof this.min === 'number' && numVal < this.min) {
-      return this.min;
     }
 
     if (typeof this.max === 'number' && numVal > this.max) {
@@ -326,27 +371,22 @@ class TLNumericInput extends React.Component<Props> {
     return matches[1] + matches[2];
   }
 
-  defaultValue: string;
+  get name() {
+    const {
+      name,
+    } = this.props;
 
-  emptyFunc: Function;
+    return name || null;
+  }
 
-  max: ?number;
+  get value() {
+    const numVal = this.parseFunc(this.input.value);
+    return numVal || null;
+  }
 
-  min: ?number;
-
-  needRegExp: RegExp;
-
-  input: HTMLInputElement;
-
-  parseFunc: ParseFunc;
-
-  propsOnBlur: Function;
-
-  propsOnChange: Function;
-
-  propsOnKeyDown: Function;
-
-  propsOnSet: Function;
+  set value(val: any) {
+    safeSetFromVal.call(this, val);
+  }
 
   render() {
     const inputProps = Object.assign({}, this.props);
@@ -355,9 +395,10 @@ class TLNumericInput extends React.Component<Props> {
     delete inputProps.max;
     delete inputProps.onBlur;
     delete inputProps.onChange;
-    delete inputProps.onKeyDown;
+    delete inputProps.onFocus;
     delete inputProps.onSet;
     delete inputProps.value;
+    delete inputProps.required;
     delete inputProps.ref;
 
     return (
@@ -368,7 +409,7 @@ class TLNumericInput extends React.Component<Props> {
         defaultValue={this.defaultValue}
         onBlur={this.onBlur}
         onChange={this.onChange}
-        onKeyDown={this.onKeyDown}
+        onFocus={this.onFocus}
         type="text"
         ref={this.onRef}
       />

@@ -8,9 +8,19 @@ const Root = () => {
     setDecimalDisabled,
   ] = useState(false);
 
-  const onChangeCheckbox = (event: SyntheticEvent<HTMLCheckboxElement>) => {
+  const [
+    required,
+    setRequired,
+  ] = useState(false);
+
+  const onChangeDecimalCheckbox = (event: SyntheticEvent<HTMLCheckboxElement>) => {
     const checkbox = event.currentTarget;
     setDecimalDisabled(checkbox.checked);
+  };
+
+  const onChangeRequiredCheckbox = (event: SyntheticEvent<HTMLCheckboxElement>) => {
+    const checkbox = event.currentTarget;
+    setRequired(checkbox.checked);
   };
 
   return (
@@ -23,11 +33,21 @@ const Root = () => {
           <div className="form-check form-check-inline">
             <label>
               <input
-                id="checkbox1"
-                onChange={onChangeCheckbox}
+                defaultChecked={disabledDecimal}
+                onChange={onChangeDecimalCheckbox}
                 type="checkbox"
               />
               Disabled decimal
+            </label>
+          </div>
+          <div className="form-check form-check-inline">
+            <label>
+              <input
+                defaultChecked={required}
+                onChange={onChangeRequiredCheckbox}
+                type="checkbox"
+              />
+              Is required
             </label>
           </div>
         </div>
@@ -35,8 +55,11 @@ const Root = () => {
       <div className="col-sm-6 offset-sm-3 col-md-4 offset-md-4 mt-3">
         <div className="form-group">
           <TLNumericInput
+            required={required}
             className="form-control form-control-lg"
             disabledDecimal={disabledDecimal}
+            min="100"
+            max="1000"
           />
         </div>
       </div>
