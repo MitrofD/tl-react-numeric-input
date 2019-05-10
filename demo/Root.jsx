@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// eslint-disable-next-line flowtype-errors/show-errors
 import { hot } from 'react-hot-loader/root';
 import TLNumericInput from '../src';
 
@@ -13,12 +14,12 @@ const Root = () => {
     setRequired,
   ] = useState(false);
 
-  const onChangeDecimalCheckbox = (event: SyntheticEvent<HTMLCheckboxElement>) => {
+  const onChangeDecimalCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const checkbox = event.currentTarget;
     setDecimalDisabled(checkbox.checked);
   };
 
-  const onChangeRequiredCheckbox = (event: SyntheticEvent<HTMLCheckboxElement>) => {
+  const onChangeRequiredCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const checkbox = event.currentTarget;
     setRequired(checkbox.checked);
   };

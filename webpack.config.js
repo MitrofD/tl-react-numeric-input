@@ -22,7 +22,8 @@ const cssLoaders = [
       hmr: isDevMode,
     },
   },
-  'thread-loader', {
+  'thread-loader',
+  {
     loader: 'css-loader',
     options: {
       sourceMap: isDevMode,
@@ -87,7 +88,13 @@ const config = {
   devServer: {
     clientLogLevel: 'none',
     hot: true,
-    stats: 'minimal',
+    stats: {
+      all: false,
+      modules: true,
+      maxModules: 0,
+      errors: true,
+      warnings: true,
+    },
     port: 3000,
     open: true,
     overlay: {
@@ -113,8 +120,16 @@ if (isDevMode) {
   config.module.rules.push({
     test: /\.jsx?$/,
     enforce: 'pre',
-    loader: 'eslint-loader',
     exclude: nodeModulesPath,
+    use: [
+      'thread-loader',
+      {
+        loader: 'eslint-loader',
+        options: {
+          cache: true,
+        },
+      },
+    ],
   });
 
   config.resolve.alias['react-dom'] = '@hot-loader/react-dom';

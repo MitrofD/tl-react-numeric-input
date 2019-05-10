@@ -5,11 +5,11 @@
     "plugin:flowtype/recommended"
   ],
   "plugins": [
-    "jsx-a11y",
     "import",
+    "react",
+    "jsx-a11y",
     "flowtype",
     "flowtype-errors",
-    "react"
   ],
   "env": {
     "browser": true
@@ -22,6 +22,8 @@
   },
   "rules": {
     "flowtype/no-types-missing-file-annotation": 0,
+    "flowtype-errors/show-errors": 2,
+    "flowtype-errors/show-warnings": 1,
     "import/no-extraneous-dependencies": 0,
     "no-unused-vars": 1,
     "jsx-a11y/label-has-for": 0,
