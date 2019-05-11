@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 
 type NumVal = string | number;
@@ -79,7 +80,7 @@ function getDefaultVal(val: string) {
   if (Number.isNaN(numVal)) {
     pureValue = this.requiredVal;
   } else if (typeof this.min === 'number' && numVal < this.min) {
-    pureValue = this.min;
+    pureValue = this.min.toString();
   }
 
   return pureValue;

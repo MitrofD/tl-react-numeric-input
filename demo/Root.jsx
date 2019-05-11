@@ -1,5 +1,5 @@
+// @flow
 import React, { useState } from 'react';
-// eslint-disable-next-line flowtype-errors/show-errors
 import { hot } from 'react-hot-loader/root';
 import TLNumericInput from '../src';
 
