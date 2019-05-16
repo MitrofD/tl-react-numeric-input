@@ -1,16 +1,21 @@
-@import 'stylesheets/bootstrap/bootstrap';
 @import 'stylesheets/tyapplyapp';
+@import 'stylesheets/bootstrap/bootstrap';
+
+body {
+  background: $tl-t-color;
+  color: $tl-l-color;
+}
 
 .Root {
-  padding: 100px 0;
+  padding: 150px 0;
 
   .control {
-    label {
-      margin-bottom: 0;
+    input[type="checkbox"] {
+      margin-right: 0.6rem;
     }
 
-    input[type="checkbox"] {
-      margin-right: 0.5rem;
+    .inner {
+      border: solid $tl-l-color $border-width;
     }
   }
 }

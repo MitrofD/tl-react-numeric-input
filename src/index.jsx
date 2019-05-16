@@ -7,7 +7,6 @@ type ParseFunc = (NumVal) => number;
 const EMPTY_STR = '';
 const MINUS_STR = '-';
 const ZERO_STR = '0';
-const MINUS_ZERO_STR = MINUS_STR + ZERO_STR;
 
 type Props = Object & {
   className?: ?string,
@@ -46,7 +45,6 @@ const genRegExp = (props: Props) => {
   }
 
   regExpStr = `^${regExpStr}`;
-
   return new RegExp(regExpStr);
 };
 
@@ -62,37 +60,35 @@ const getRequiredVal = (min: ?number, isRequred: any) => {
 const getClassName = (propsVal: any) => {
   const defClassName = 'TLNumericInput';
 
-  if (propsVal) {
-    if (typeof propsVal === 'string') {
-      return `${defClassName} ${propsVal}`;
-    }
-
-    throw new Error('Attribute className has to be "string" type');
+  if (typeof propsVal === 'string') {
+    return `${defClassName} ${propsVal}`;
   }
 
   return defClassName;
 };
 
 function getDefaultVal(val: string) {
-  let pureValue = this.getValue(val);
+  const pureValue = this.getValue(val);
   const numVal = this.parseFunc(pureValue);
 
   if (Number.isNaN(numVal)) {
-    pureValue = this.requiredVal;
-  } else if (typeof this.min === 'number' && numVal < this.min) {
-    pureValue = this.min.toString();
+    return this.requiredVal;
+  }
+
+  if (typeof this.min === 'number' && numVal < this.min) {
+    return this.min.toString();
+  }
+
+  if (typeof this.max === 'number' && numVal >= this.max) {
+    return this.max.toString();
   }
 
   return pureValue;
 }
 
-const getEvent = (eventName: string, propsVal: any) => {
-  if (propsVal) {
-    if (typeof propsVal === 'function') {
-      return propsVal;
-    }
-
-    throw new Error(`Attribute ${eventName} has to be "funtion" type`);
+const getEvent = (propsVal: any) => {
+  if (typeof propsVal === 'function') {
+    return propsVal;
   }
 
   return () => {};
@@ -107,7 +103,7 @@ const getParseFunc = (propsVal: any) => {
 };
 
 const getExtremum = (attr: string, val: ?NumVal, parseFunc: ParseFunc, dDecimal?: boolean) => {
-  if (val) {
+  if (typeof val === 'string' || typeof val === 'number') {
     const pVal = parseFunc(val);
 
     if (Number.isNaN(pVal)) {
@@ -189,6 +185,8 @@ class TLNumericInput extends React.Component<Props> {
 
   propsOnChange: Function;
 
+  propsOnError: Function;
+
   propsOnFocus: Function;
 
   propsOnSet: Function;
@@ -197,15 +195,38 @@ class TLNumericInput extends React.Component<Props> {
 
   constructor(props: Props, context: null) {
     super(props, context);
-    this.propsOnBlur = getEvent('onBlur', props.onBlur);
-    this.propsOnChange = getEvent('onChange', props.onChange);
-    this.propsOnFocus = getEvent('onFocus', props.onChange);
-    this.propsOnSet = getEvent('onSet', props.onSet);
+    this.propsOnBlur = getEvent(props.onBlur);
+    this.propsOnChange = getEvent(props.onChange);
+    this.propsOnError = getEvent(props.onError);
+    this.propsOnFocus = getEvent(props.onChange);
+    this.propsOnSet = getEvent(props.onSet);
     this.parseFunc = getParseFunc(props.disabledDecimal);
     this.needRegExp = genRegExp(props);
-    this.max = getExtremum('max', props.max, this.parseFunc, props.disabledDecimal);
-    this.min = getExtremum('min', props.min, this.parseFunc, props.disabledDecimal);
-    checkExtremums(this.min, this.max);
+
+    let max: ?number = null;
+    let min: ?number = null;
+
+    try {
+      max = getExtremum('max', props.max, this.parseFunc, props.disabledDecimal);
+    } catch (error) {
+      this.propsOnError(error);
+    }
+
+    try {
+      min = getExtremum('min', props.min, this.parseFunc, props.disabledDecimal);
+    } catch (error) {
+      this.propsOnError(error);
+    }
+
+    try {
+      checkExtremums(min, max);
+    } catch (error) {
+      min = null;
+      this.propsOnError(error);
+    }
+
+    this.max = max;
+    this.min = min;
     this.emptyFunc = genEmptyFunc(this.min);
     this.requiredVal = getRequiredVal(this.min, props.required);
 
@@ -234,10 +255,9 @@ class TLNumericInput extends React.Component<Props> {
       disabledDecimal,
       onBlur,
       onChange,
+      onError,
       onFocus,
       onSet,
-      max,
-      min,
       required,
     } = propsCopy;
 
@@ -245,6 +265,7 @@ class TLNumericInput extends React.Component<Props> {
     let needUpdateMax = false;
     let needUpdateMin = false;
     let needUpdateRegExp = false;
+    let error: ?Error = null;
 
     if (nextProps.className !== className) {
       propsCopy.className = nextProps.className;
@@ -253,30 +274,35 @@ class TLNumericInput extends React.Component<Props> {
 
     if (nextProps.onBlur !== onBlur) {
       propsCopy.onBlur = nextProps.onBlur;
-      this.propsOnBlur = getEvent('onBlur', nextProps.onBlur);
+      this.propsOnBlur = getEvent(nextProps.onBlur);
     }
 
     if (nextProps.onChange !== onChange) {
       propsCopy.onChange = nextProps.onChange;
-      this.propsOnChange = getEvent('onChange', nextProps.onChange);
+      this.propsOnChange = getEvent(nextProps.onChange);
+    }
+
+    if (nextProps.onError !== onError) {
+      propsCopy.onError = nextProps.onError;
+      this.propsOnError = getEvent(nextProps.onError);
     }
 
     if (nextProps.onFocus !== onFocus) {
       propsCopy.onFocus = nextProps.onFocus;
-      this.propsOnFocus = getEvent('onFocus', nextProps.onFocus);
+      this.propsOnFocus = getEvent(nextProps.onFocus);
     }
 
     if (nextProps.onSet !== onSet) {
       propsCopy.onSet = nextProps.onSet;
-      this.propsOnSet = getEvent('onSet', nextProps.onSet);
+      this.propsOnSet = getEvent(nextProps.onSet);
     }
 
-    if (nextProps.max !== max) {
+    if (nextProps.max !== this.max) {
       needUpdateMax = true;
       propsCopy.max = nextProps.max;
     }
 
-    if (nextProps.min !== min) {
+    if (nextProps.min !== this.max) {
       needUpdateMin = true;
       needUpdateRegExp = true;
       propsCopy.min = nextProps.min;
@@ -292,17 +318,39 @@ class TLNumericInput extends React.Component<Props> {
 
     if (needUpdateMax) {
       needCheckExtremums = true;
-      this.max = getExtremum('max', nextProps.max, this.parseFunc, nextProps.disabledDecimal);
+      let nMax: ?number = null;
+
+      try {
+        nMax = getExtremum('max', nextProps.max, this.parseFunc, nextProps.disabledDecimal);
+      } catch (eError) {
+        error = eError;
+      }
+
+      this.max = nMax;
     }
 
     if (needUpdateMin) {
       needCheckExtremums = true;
-      this.min = getExtremum('min', nextProps.min, this.parseFunc, nextProps.disabledDecimal);
+      let nMin: ?number = null;
+
+      try {
+        nMin = getExtremum('min', nextProps.min, this.parseFunc, nextProps.disabledDecimal);
+      } catch (eError) {
+        error = eError;
+      }
+
+      this.min = nMin;
     }
 
     if (needCheckExtremums) {
       needUpdateRegExp = true;
-      checkExtremums(this.min, this.max);
+
+      try {
+        checkExtremums(this.min, this.max);
+      } catch (eError) {
+        this.min = null;
+        error = eError;
+      }
     }
 
     if (needUpdateRegExp) {
@@ -314,21 +362,26 @@ class TLNumericInput extends React.Component<Props> {
       safeSetFromVal.call(this, nextProps.value);
     }
 
-    if (needUpdateMin || nextProps.required !== required) {
+    if (needCheckExtremums || nextProps.required !== required) {
       propsCopy.required = nextProps.required;
       this.requiredVal = getRequiredVal(this.min, nextProps.required);
       this.input.value = getDefaultVal.call(this, this.input.value);
     }
 
+    this.propsOnError(error);
     return shallowCompare(nextProps, propsCopy);
   }
 
   onBlur(event: SyntheticEvent<HTMLInputElement>) {
     const input = event.currentTarget;
     const pureValue = getDefaultVal.call(this, input.value);
-    input.value = pureValue;
+
+    if (input.value !== pureValue) {
+      input.value = pureValue;
+      this.propsOnSet(this);
+    }
+
     this.propsOnBlur(event);
-    this.propsOnSet(this);
   }
 
   onChange(event: SyntheticEvent<HTMLInputElement>) {
@@ -342,11 +395,7 @@ class TLNumericInput extends React.Component<Props> {
   onFocus(event: SyntheticEvent<HTMLInputElement>) {
     const input = event.currentTarget;
     const value = input.value.trim();
-
-    if (value === ZERO_STR || value === MINUS_ZERO_STR) {
-      input.setSelectionRange(0, value.length);
-    }
-
+    input.setSelectionRange(0, value.length);
     this.propsOnFocus(event);
   }
 
@@ -364,12 +413,13 @@ class TLNumericInput extends React.Component<Props> {
       return this.emptyFunc(cleanValue);
     }
 
-    if (typeof this.max === 'number' && numVal > this.max) {
-      return this.max;
+    const matches = (cleanValue.match(this.needRegExp): any);
+
+    if (matches) {
+      return matches[1] + matches[2];
     }
 
-    const matches: any[] = (cleanValue.match(this.needRegExp): any);
-    return matches[1] + matches[2];
+    return this.emptyFunc(cleanValue);
   }
 
   get name() {
@@ -382,7 +432,7 @@ class TLNumericInput extends React.Component<Props> {
 
   get value() {
     const numVal = this.parseFunc(this.input.value);
-    return numVal || null;
+    return Number.isNaN(numVal) ? null : numVal;
   }
 
   render() {

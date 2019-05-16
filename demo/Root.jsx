@@ -14,6 +14,34 @@ const Root = () => {
     setRequired,
   ] = useState(false);
 
+  const [
+    min,
+    setMin,
+  ] = useState(null);
+
+  const [
+    max,
+    setMax,
+  ] = useState(null);
+
+  const [
+    error,
+    setError,
+  ] = useState(null);
+
+  const [
+    value,
+    setValue,
+  ] = useState(null);
+
+  const onSetMinNumericInput = (input: TLNumericInput) => {
+    setMin(input.value);
+  };
+
+  const onSetMaxNumericInput = (input: TLNumericInput) => {
+    setMax(input.value);
+  };
+
   const onChangeDecimalCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const checkbox = event.currentTarget;
     setDecimalDisabled(checkbox.checked);
@@ -24,13 +52,52 @@ const Root = () => {
     setRequired(checkbox.checked);
   };
 
+  const onErrorNumValue = (inputError: ?Error) => {
+    let newValue: ?string = null;
+
+    if (inputError) {
+      newValue = inputError.message;
+    }
+
+    if (error !== newValue) {
+      setError(newValue);
+    }
+  };
+
+  const onSetNumValue = (input: TLNumericInput) => {
+    setValue(input.value);
+  };
+
   return (
     <div className="Root row">
       <div className="col-12 mb-3">
         <h1 className="text-center text-tl-l text-truncate">TLNumericInput</h1>
       </div>
       <div className="col-sm-8 offset-sm-2 col-md-6 offset-md-3 mt-3 mb-3 control">
-        <div className="border border-tl-l rounded p-3">
+        {error && (
+          <div className="alert alert-danger">
+            {error}
+          </div>
+        )}
+        <div className="inner p-3">
+          <div className="row">
+            <div className="form-group col-md-6">
+              <label htmlFor="min-input">Min:</label>
+              <TLNumericInput
+                className="form-control"
+                id="min-input"
+                onSet={onSetMinNumericInput}
+              />
+            </div>
+            <div className="form-group col-md-6">
+              <label htmlFor="max-input">Max:</label>
+              <TLNumericInput
+                className="form-control"
+                id="max-input"
+                onSet={onSetMaxNumericInput}
+              />
+            </div>
+          </div>
           <div className="form-check form-check-inline">
             <label>
               <input
@@ -59,8 +126,11 @@ const Root = () => {
             required={required}
             className="form-control form-control-lg"
             disabledDecimal={disabledDecimal}
-            min="100"
-            max="1000"
+            onError={onErrorNumValue}
+            onSet={onSetNumValue}
+            min={min}
+            max={max}
+            value={value}
           />
         </div>
       </div>
