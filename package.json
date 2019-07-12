@@ -1,6 +1,6 @@
 {
   "name": "tl-react-numeric-input",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Numeric input component that can replace the native numeric input which is not yet very well supported and where it is, it does not have the same appearance across the browsers",
   "main": "dist/index.js",
   "repository": {

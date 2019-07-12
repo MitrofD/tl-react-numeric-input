@@ -171,6 +171,8 @@ class TLNumericInput extends React.Component<Props> {
 
   emptyFunc: Function;
 
+  focusVal: ?NumVal;
+
   max: ?number;
 
   min: ?number;
@@ -376,7 +378,7 @@ class TLNumericInput extends React.Component<Props> {
     const input = event.currentTarget;
     const pureValue = getDefaultVal.call(this, input.value);
 
-    if (input.value !== pureValue) {
+    if (this.focusVal !== pureValue) {
       input.value = pureValue;
       this.propsOnSet(this);
     }
@@ -396,6 +398,7 @@ class TLNumericInput extends React.Component<Props> {
     const input = event.currentTarget;
     const value = input.value.trim();
     input.setSelectionRange(0, value.length);
+    this.focusVal = value;
     this.propsOnFocus(event);
   }
 
@@ -455,7 +458,7 @@ class TLNumericInput extends React.Component<Props> {
         className={getClassName(inputProps.className)}
         defaultValue={this.defaultValue}
         onBlur={this.onBlur}
-        onChange={this.onChange}
+        // onChange={this.onChange}
         onFocus={this.onFocus}
         type="text"
         ref={this.onRef}
