@@ -458,7 +458,6 @@ class TLNumericInput extends React.Component<Props> {
         className={getClassName(inputProps.className)}
         defaultValue={this.defaultValue}
         onBlur={this.onBlur}
-        // onChange={this.onChange}
         onFocus={this.onFocus}
         type="text"
         ref={this.onRef}
