@@ -4,4 +4,4 @@
 
 > React component as a numeric input field
 
-[![Known Vulnerabilities](https://snyk.io//test/github/MitrophD/tl-react-numeric-input/badge.svg?targetFile=package.json)](https://snyk.io//test/github/MitrophD/tl-react-numeric-input?targetFile=package.json) [![Dependency Status](https://david-dm.org/boennemann/badges.svg)](https://david-dm.org/boennemann/badges)
+[![Known Vulnerabilities](https://snyk.io//test/github/MitrophD/tl-react-numeric-input/badge.svg?targetFile=package.json)](https://snyk.io//test/github/MitrophD/tl-react-numeric-input?targetFile=package.json) [![Dependency Status](https://david-dm.org/MitrophD/tl-react-numeric-input.svg)](https://david-dm.org/MitrophD/tl-react-numeric-input) [![Dev dependency Status](https://david-dm.org/MitrophD/tl-react-numeric-input/dev-status.svg)](https://david-dm.org/MitrophD/tl-react-numeric-input#info=devDependencies)
