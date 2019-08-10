@@ -1,7 +1,9 @@
 {
   "name": "tl-react-numeric-input",
-  "version": "1.1.5",
-  "description": "Numeric input component that can replace the native numeric input which is not yet very well supported and where it is, it does not have the same appearance across the browsers",
+  "version": "1.1.7",
+  "description": "React component as a numeric input field",
+  "keywords": ["component", "field", "input", "number", "numeric", "input", "react", "tyapplyapp"],
+  "tags": ["component", "field", "input", "number", "numeric", "input", "react", "tyapplyapp"],
   "main": "dist/index.js",
   "repository": {
     "type": "git",
