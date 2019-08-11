@@ -1,6 +1,6 @@
 {
   "name": "tl-react-numeric-input",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "React component as a numeric input field",
   "keywords": ["component", "field", "input", "number", "numeric", "input", "react", "tyapplyapp"],
   "tags": ["component", "field", "input", "number", "numeric", "input", "react", "tyapplyapp"],
