@@ -9,3 +9,13 @@
 [![https://nodei.co/npm/tl-react-numeric-input.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/tl-react-numeric-input.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/tl-react-numeric-input)
 
 ## Installation
+
+Use the package manager to install tl-react-numeric-input
+
+```bash
+  npm i tl-react-numeric-input
+```
+or
+```bash
+  yarn add tl-react-numeric-input
+```
