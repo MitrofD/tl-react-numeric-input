@@ -19,3 +19,7 @@ or
 ```bash
   yarn add tl-react-numeric-input
 ```
+
+## Licensess
+
+[MIT](https://choosealicense.com/licenses/mit/)
