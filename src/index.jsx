@@ -165,8 +165,6 @@ const shallowCompare = (newObj: Object, prevObj: Object) => {
 };
 
 class TLNumericInput extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
   defaultValue: string;
 
   emptyFunc: Function;
@@ -250,7 +248,7 @@ class TLNumericInput extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const propsCopy = Object.assign({}, this.props);
+    const propsCopy = { ...this.props };
 
     const {
       className,
@@ -376,10 +374,9 @@ class TLNumericInput extends React.Component<Props> {
 
   onBlur(event: SyntheticEvent<HTMLInputElement>) {
     const input = event.currentTarget;
-    const pureValue = getDefaultVal.call(this, input.value);
+    input.value = getDefaultVal.call(this, input.value);
 
-    if (this.focusVal !== pureValue) {
-      input.value = pureValue;
+    if (this.focusVal !== input.value) {
       this.propsOnSet(this);
     }
 
@@ -390,8 +387,10 @@ class TLNumericInput extends React.Component<Props> {
     const input = event.currentTarget;
     const pureValue = this.getValue(input.value);
     input.value = pureValue;
+    /*
     this.propsOnChange(event);
     this.propsOnSet(this);
+    */
   }
 
   onFocus(event: SyntheticEvent<HTMLInputElement>) {
@@ -439,7 +438,7 @@ class TLNumericInput extends React.Component<Props> {
   }
 
   render() {
-    const inputProps = Object.assign({}, this.props);
+    const inputProps = { ...this.props };
     delete inputProps.disabledDecimal;
     delete inputProps.min;
     delete inputProps.max;
@@ -458,6 +457,7 @@ class TLNumericInput extends React.Component<Props> {
         className={getClassName(inputProps.className)}
         defaultValue={this.defaultValue}
         onBlur={this.onBlur}
+        onChange={this.onChange}
         onFocus={this.onFocus}
         type="text"
         ref={this.onRef}
@@ -465,5 +465,7 @@ class TLNumericInput extends React.Component<Props> {
     );
   }
 }
+
+TLNumericInput.defaultProps = defaultProps;
 
 export default TLNumericInput;
