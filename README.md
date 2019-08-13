@@ -1,4 +1,4 @@
-![TLNumericInput (React component)](https://repository-images.githubusercontent.com/184097031/279e6200-bc44-11e9-8f5b-35eaef6f8b6a)
+![TLNumericInput (React component)](https://repository-images.githubusercontent.com/184097031/25e8c000-be37-11e9-9a69-042a652b5cd2)(https://www.npmjs.com/package/tl-react-numeric-input)
 # TLNumericInput
 > React component as a numeric input field
 
