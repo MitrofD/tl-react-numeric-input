@@ -9,16 +9,36 @@
 [![npmjs](https://nodei.co/npm/tl-react-numeric-input.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/tl-react-numeric-input)
 
 ## Installation
+
 Use the package manager to install tl-react-numeric-input
 
-```bash
+```shell
   npm i tl-react-numeric-input
 ```
 or
-```bash
+```shell
   yarn add tl-react-numeric-input
 ```
 
+## Usage
+
+```js
+  import TLNumericInput from 'tl-react-numeric-input';
+
+  <TLNumericInput onSet={handleOnSet} />
+```
+
+Your handler for the onSet event should expect a TLNumericInput. For example:
+
+```js
+  function handleOnSet(numericInput) {
+    this.setState({
+      numeric: numericInput.value
+    });
+  }
+```
+
 ## Demo
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

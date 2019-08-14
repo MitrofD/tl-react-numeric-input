@@ -165,6 +165,8 @@ const shallowCompare = (newObj: Object, prevObj: Object) => {
 };
 
 class TLNumericInput extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
   defaultValue: string;
 
   emptyFunc: Function;
@@ -248,7 +250,7 @@ class TLNumericInput extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const propsCopy = { ...this.props };
+    const propsCopy: Object = { ...this.props };
 
     const {
       className,
@@ -438,7 +440,7 @@ class TLNumericInput extends React.Component<Props> {
   }
 
   render() {
-    const inputProps = { ...this.props };
+    const inputProps: Object = { ...this.props };
     delete inputProps.disabledDecimal;
     delete inputProps.min;
     delete inputProps.max;
@@ -465,7 +467,5 @@ class TLNumericInput extends React.Component<Props> {
     );
   }
 }
-
-TLNumericInput.defaultProps = defaultProps;
 
 export default TLNumericInput;
