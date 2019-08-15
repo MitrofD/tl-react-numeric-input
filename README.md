@@ -10,14 +10,36 @@
 
 ## Installation
 
-Use the package manager to install tl-react-numeric-input
+Use the package manager to install tl-react-numeric-input:
 
 ```shell
+  yarn add tl-react-numeric-input
+  # or
   npm i tl-react-numeric-input
 ```
-or
+
+## Demo
+
+Download and unzip archive or clone with command:
+
 ```shell
-  yarn add tl-react-numeric-input
+  git clone https://github.com/MitrofD/tl-react-numeric-input.git
+```
+
+Then install dependencies:
+
+```shell
+  yarn i
+  # or
+  npm i
+```
+
+Last step run **start** command:
+
+```shell
+  yarn run start
+  # or
+  npm run start
 ```
 
 ## Usage
@@ -38,7 +60,9 @@ Your handler for the onSet event should expect a TLNumericInput. For example:
   }
 ```
 
-## Demo
+## Attributes
+
+All attributes for input with number type + optional **onSet** handler
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
