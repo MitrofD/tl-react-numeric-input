@@ -389,10 +389,6 @@ class TLNumericInput extends React.Component<Props> {
     const input = event.currentTarget;
     const pureValue = this.getValue(input.value);
     input.value = pureValue;
-    /*
-    this.propsOnChange(event);
-    this.propsOnSet(this);
-    */
   }
 
   onFocus(event: SyntheticEvent<HTMLInputElement>) {
