@@ -1,6 +1,6 @@
 {
   "name": "tl-react-numeric-input",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "React component as a numeric input field",
   "keywords": [
     "component",
@@ -35,9 +35,6 @@
     "test": "snyk test"
   },
   "license": "MIT",
-  "files": [
-    "/dist/*"
-  ],
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
