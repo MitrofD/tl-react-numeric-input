@@ -165,8 +165,6 @@ const shallowCompare = (newObj: Object, prevObj: Object) => {
 };
 
 class TLNumericInput extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
   defaultValue: string;
 
   emptyFunc: Function;
@@ -194,6 +192,8 @@ class TLNumericInput extends React.Component<Props> {
   propsOnSet: Function;
 
   requiredVal: string;
+
+  static defaultProps = defaultProps;
 
   constructor(props: Props, context: null) {
     super(props, context);
