@@ -2,13 +2,14 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
+const DuplicatePackageCheckerWebpackPlugin = require('duplicate-package-checker-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
-module.exports = (env) => {
+
+module.exports = function webpackConfig(env) {
   const devMode = 'development';
   const mode = env.NODE_ENV || devMode;
   const isDevMode = mode === devMode;
@@ -81,7 +82,26 @@ module.exports = (env) => {
       aggregateTimeout: 100,
     },
     devtool: 'eval',
-    optimization: {},
+    optimization: {
+      minimizer: [
+        new TerserWebpackPlugin({
+          cache: true,
+          parallel: true,
+          exclude: nodeModulesPath,
+          terserOptions: {
+            mangle: true,
+            warnings: false,
+            compress: true,
+            ie8: true,
+            output: {
+              comments: false,
+              beautify: false,
+            },
+          },
+        }),
+        new OptimizeCSSAssetsPlugin(),
+      ]
+    },
     output: {
       filename: 'index.js',
       libraryTarget: 'umd',
@@ -94,7 +114,6 @@ module.exports = (env) => {
         all: false,
         modules: true,
         maxModules: 0,
-        errors: true,
         warnings: true,
       },
       port: 3000,
@@ -106,9 +125,7 @@ module.exports = (env) => {
     target: 'web',
   };
 
-  const minimazers = [];
   const plugins = [
-    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       isDevMode: JSON.stringify(isDevMode),
     }),
@@ -128,7 +145,8 @@ module.exports = (env) => {
         {
           loader: 'eslint-loader',
           options: {
-            cache: true,
+            emitError: true,
+            emitWarning: true,
           },
         },
       ],
@@ -137,7 +155,8 @@ module.exports = (env) => {
     config.resolve.alias['react-dom'] = '@hot-loader/react-dom';
 
     Array.prototype.push.apply(plugins, [
-      new DuplicatePackageCheckerPlugin({
+      new DuplicatePackageCheckerWebpackPlugin({
+        verbose: true,
         emitError: true,
       }),
       new webpack.HotModuleReplacementPlugin(),
@@ -149,31 +168,10 @@ module.exports = (env) => {
 
   // Production mode
   } else {
-    Array.prototype.push.apply(minimazers, [
-      new TerserWebpackPlugin({
-        cache: true,
-        parallel: true,
-        exclude: nodeModulesPath,
-        terserOptions: {
-          mangle: true,
-          warnings: false,
-          compress: true,
-          ie8: true,
-          output: {
-            comments: false,
-            beautify: false,
-          },
-        },
-      }),
-      new OptimizeCSSAssetsPlugin(),
-    ]);
-
     config.devtool = false;
     config.watch = false;
   }
 
-  config.optimization.minimizer = minimazers;
   config.plugins = plugins;
-
   return config;
 };

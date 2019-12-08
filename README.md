@@ -29,9 +29,9 @@ Download and unzip archive or clone with command:
 Then install dependencies:
 
 ```shell
-  yarn i
+  yarn install
   # or
-  npm i
+  npm install
 ```
 
 Last step run **start** command:
