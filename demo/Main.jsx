@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import TLNumericInput from '../src';
+import './main.scss';
 
-const Root = () => {
+
+const Main = () => {
   const [
     disabledDecimal,
     setDecimalDisabled,
@@ -69,7 +71,7 @@ const Root = () => {
   };
 
   return (
-    <div className="Root row">
+    <div className="Main row">
       <div className="col-12 mb-3">
         <h1 className="text-center text-tl-l text-truncate">TLNumericInput</h1>
       </div>
@@ -138,4 +140,4 @@ const Root = () => {
   );
 };
 
-export default hot(Root);
+export default hot(Main);

@@ -1,4 +1,4 @@
-@import 'stylesheets/tyapplyapp';
+@import 'stylesheets/tyapplyapp.scss';
 @import '~bootstrap/scss/bootstrap';
 
 
@@ -7,7 +7,7 @@ body {
   color: $tl-l-color;
 }
 
-.Root {
+.Main {
   padding: 150px 0;
 
   .control {
@@ -16,7 +16,7 @@ body {
     }
 
     .inner {
-      border: solid $tl-l-color $border-width;
+      border: solid $tl-l-color 2px;
     }
   }
 }

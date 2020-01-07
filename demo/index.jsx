@@ -1,11 +1,10 @@
 import React from 'react';
-import { render } from 'react-dom';
-import Root from './Root';
-import './main.scss';
+import ReactDOM from 'react-dom';
+import Main from './Main';
 
 
 const rootEl = document.getElementById('root');
 
 if (rootEl) {
-  render(<Root />, rootEl);
+  ReactDOM.render(<Main />, rootEl);
 }
